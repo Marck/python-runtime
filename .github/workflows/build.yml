@@ -4,7 +4,9 @@ name: build image
 # manual dispatch.
 on:
   push:
-    branches: [main]
+    # renovate/** builds (without pushing) so Renovate can automerge on a green
+    # branch.
+    branches: [main, "renovate/**"]
     paths:
       - "Dockerfile"
       - ".github/workflows/build.yml"
@@ -33,6 +35,7 @@ jobs:
         uses: docker/setup-buildx-action@v4
 
       - name: Log in to GHCR
+        if: ${{ !startsWith(github.ref, 'refs/heads/renovate/') }}
         uses: docker/login-action@v4
         with:
           registry: ghcr.io
@@ -45,7 +48,7 @@ jobs:
           context: .
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: ${{ !startsWith(github.ref, 'refs/heads/renovate/') }}
           tags: |
             ${{ env.IMAGE }}:1.0.0
             ${{ env.IMAGE }}:latest
