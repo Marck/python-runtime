@@ -50,6 +50,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ !startsWith(github.ref, 'refs/heads/renovate/') }}
           tags: |
-            ${{ env.IMAGE }}:1.0.0
+            ${{ env.IMAGE }}:1.1.0
             ${{ env.IMAGE }}:latest
           provenance: false
